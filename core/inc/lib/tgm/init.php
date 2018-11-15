@@ -97,7 +97,7 @@ function nextcore_register_required_plugins() {
         array(
             'name'                  => esc_html__('Advanced Custom Fields PRO', 'nextcore'),
             'slug'                  => 'advanced-custom-fields-pro',
-            'source'                => get_template_directory_uri(). '/inc/lib/tgm/plugin/advanced-custom-fields-pro.zip',
+            'source'                => get_template_directory_uri(). '/core/inc/lib/tgm/plugin/advanced-custom-fields-pro.zip',
             'required'              => true,
             'force_activation'      => false,
             'force_deactivation'    => true,
@@ -114,7 +114,7 @@ function nextcore_register_required_plugins() {
         array(
             'name'                  => esc_html__('Elementor PRO', 'nextcore'),
             'slug'                  => 'elementor-pro',
-            'source'                => get_template_directory_uri(). '/inc/lib/tgm/plugin/elementor-pro.zip',
+            'source'                => get_template_directory_uri(). '/core/inc/lib/tgm/plugin/elementor-pro.zip',
             'required'              => true,
             'force_activation'      => false,
             'force_deactivation'    => true,
