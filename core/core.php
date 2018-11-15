@@ -14,7 +14,10 @@
         }
 
         public function update(){
+            /*Check Update Theme*/
             include "inc/lib/update/update.php";
+            /*Check setting Plugin*/
+            include "inc/lib/tgm/init.php";
         }
     }
 
