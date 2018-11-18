@@ -9,16 +9,8 @@
  * @package Nextcore
  */
 
+    do_action('hook_footer');
 ?>
-
-	</div><!-- #content -->
-
-	<footer id="colophon" class="site-footer">
-		<p>Design by Thanh Tung - 2018</p>
-	</footer><!-- #colophon -->
-</div><!-- #page -->
-
 <?php wp_footer(); ?>
-
 </body>
 </html>

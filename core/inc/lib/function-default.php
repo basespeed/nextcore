@@ -122,10 +122,6 @@ add_action( 'widgets_init', 'nextcore_widgets_init' );
 function nextcore_scripts() {
     wp_enqueue_style( 'nextcore-style', get_stylesheet_uri() );
 
-    wp_enqueue_script( 'nextcore-navigation',  '/js/navigation.js', array(), '20151215', true );
-
-    wp_enqueue_script( 'nextcore-skip-link-focus-fix',  '/js/skip-link-focus-fix.js', array(), '20151215', true );
-
     if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
         wp_enqueue_script( 'comment-reply' );
     }
@@ -135,27 +131,122 @@ add_action( 'wp_enqueue_scripts', 'nextcore_scripts' );
 /**
  * Implement the Custom Header feature.
  */
-require  'inc/custom-header.php';
+require get_template_directory() . '/core/inc/lib/inc/custom-header.php';
 
 /**
  * Custom template tags for this theme.
  */
-require  'inc/template-tags.php';
+require get_template_directory() . '/core/inc/lib/inc/template-tags.php';
 
 /**
  * Functions which enhance the theme by hooking into WordPress.
  */
-require  'inc/template-functions.php';
+require get_template_directory() . '/core/inc/lib/inc/template-functions.php';
 
 /**
  * Customizer additions.
  */
-require  'inc/customizer.php';
+require get_template_directory() . '/core/inc/lib/inc/customizer.php';
 
 /**
  * Load Jetpack compatibility file.
  */
 if ( defined( 'JETPACK__VERSION' ) ) {
-    require  'inc/jetpack.php';
+    require get_template_directory() . '/core/inc/lib/inc/jetpack.php';
 }
 
+
+if (defined('WP_DEBUG') && true === WP_DEBUG) {
+    function core_style() {
+        wp_enqueue_style( 'core-awesome', get_theme_file_uri().'/core/inc/assets/css/font-awesome.min.css', false );
+        wp_enqueue_style( 'core-style', get_theme_file_uri().'/core/inc/assets/css/style.css', false );
+    }
+    add_action( 'wp_enqueue_scripts', 'core_style' );
+
+    function core_script() {
+        wp_enqueue_script( 'core-js', get_theme_file_uri().'/core/inc/assets/js/js.js', true );
+    }
+    add_action( 'wp_enqueue_scripts', 'core_script' );
+}else{
+    function core_style() {
+        wp_enqueue_style( 'core-awesome', get_theme_file_uri().'/core/inc/assets/css/font-awesome.min.css', false );
+        wp_enqueue_style( 'core-style', get_theme_file_uri().'/core/inc/assets/css/style.min.css', false );
+    }
+    add_action( 'wp_enqueue_scripts', 'core_style' );
+
+    function core_script() {
+        wp_enqueue_script( 'core-js', get_theme_file_uri().'/core/inc/assets/js/js.min.js', true );
+    }
+    add_action( 'wp_enqueue_scripts', 'core_script' );
+}
+
+//edit pagination
+function core_paginate($prev_icon, $next_icon){
+    global $wp_query;
+
+    $big = 999999999; // need an unlikely integer
+
+    echo '<nav class="pagination">';
+    echo paginate_links( array(
+        'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+        'format' => '?paged=%#%',
+        'prev_next'          => true,
+        'prev_text'          => $prev_icon,
+        'next_text'          => $next_icon,
+        'current' => max( 1, get_query_var('paged') ),
+        'total' => $wp_query->max_num_pages
+    ) );
+    echo '</nav>';
+}
+
+//edit form search
+function my_search_form( $form ) {
+    $form = '<form role="search" method="get" id="searchform" class="searchform" action="' . home_url( '/' ) . '" >
+    <div><label class="screen-reader-text" for="s">' . __( 'Search for:' ) . '</label>
+    <input type="text" value="' . get_search_query() . '" name="s" id="s" placeholder="'.apply_filters('hook_change_placeholder_search','Từ khóa cần tìm').'" />
+    <button  type="submit" id="searchsubmit">'.apply_filters('hook_change_icon_search','<i class="fa fa-search" aria-hidden="true"></i>').'</button>
+    </div>
+    </form>';
+
+    return $form;
+}
+
+add_filter( 'get_search_form', 'my_search_form', 100 );
+
+//change title archive
+add_filter( 'get_the_archive_title', function ($title) {
+
+    if ( is_category() ) {
+
+        $title = single_cat_title( '', false );
+
+    } elseif ( is_tag() ) {
+
+        $title = single_tag_title( '', false );
+
+    } elseif ( is_author() ) {
+
+        $title = '<span class="vcard">' . get_the_author() . '</span>' ;
+
+    }
+
+    return $title;
+
+});
+
+
+//edit search post type
+add_filter( 'pre_get_posts', 'my_search' );
+
+function my_search($query) {
+
+    // Check if we are on the front end main search query
+    if ( !is_admin() && $query->is_main_query() && $query->is_search() ) {
+
+        // Change the post_type parameter on the query
+        $query->set('post_type', 'post');
+    }
+
+    // Return the modified query
+    return $query;
+}
