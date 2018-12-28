@@ -24,7 +24,8 @@ Class NextCore{
     }
 
     public function hook(){
-        include "inc/lib/hook/hook-loop-post.php";
+        include "inc/lib/hook/hook-loop-archive-post.php";
+        include "inc/lib/hook/hook-loop-single-post.php";
     }
 
     public function widget(){
@@ -40,6 +41,12 @@ Class NextCore{
         }
         function get_templates_single(){
             include "inc/templates/single.php";
+        }
+        function get_templates_archive_shop(){
+            include "inc/templates/archive-shop.php";
+        }
+        function get_templates_page(){
+            include "inc/templates/page.php";
         }
     }
 }

@@ -1,8 +1,27 @@
 .edit-single-post{
   .content_single{
+    margin-top: 15px;
     img{
       width: 100%;
       height: auto;
+    }
+    h1{
+      margin: 15px 0;
+      float: left;
+    }
+    span.count-views{
+      float: left;
+      margin-top: 20px;
+      margin-left: 8px;
+    }
+    .content-single-post{
+      clear: both;
+    }
+    .plugin-fb-cmt{
+      width: calc(100% + 16px);
+      margin-left: -8px;
+      margin-top: 15px;
+      margin-bottom: -12px;
     }
   }
 }

@@ -10,7 +10,7 @@ class Tintuc_Widget extends WP_Widget {
     function __construct() {
         parent::__construct(
             'tintuc_widget', // Base ID
-            esc_html__( 'Tin tức', 'pure' ), // Name
+            esc_html__( 'Tin tức mới nhất', 'pure' ), // Name
             array( 'description' => esc_html__( 'Tin tức thiết kế cho nextcore theme', 'pure' ), ) // Args
         );
     }

@@ -10,9 +10,16 @@ get_header();
                         /* Start the Loop */
                         echo '<div class="content_single">';
                         while ( have_posts() ) : the_post();
-                        the_post_thumbnail();
-                        the_title();
-                        the_content();
+                        do_action('hook_loop_single_post');
+                        /**
+                         * Hook: hook_loop_single_post.
+                         *
+                         * @hooked hook_loop_single_post_image - 1
+                         * @hooked hook_loop_single_post_title - 5
+                         * @hooked hook_loop_single_post_count_view - 10
+                         * @hooked hook_loop_single_post_content - 15
+                         * @hooked hook_loop_single_post_comments_facebook - 20
+                         */
                         endwhile;
                         echo '</div>';
                     else :

@@ -121,8 +121,8 @@ function nextcore_register_required_plugins() {
         ),
 
         array(
-            'name'              => esc_html__('Caldera Forms', 'nextcore'),
-            'slug'              => 'caldera-forms',
+            'name'              => esc_html__('Contact Form 7', 'nextcore'),
+            'slug'              => 'contact-form-7',
             'required'          => true,
             'force_activation'  => false,
         ),

@@ -96,6 +96,9 @@ h1{
                 color: #333333;
                 font-size: 14px;
               }
+              span.count-views{
+                @extend time;
+              }
               p{
                 color: #888888;
                 display: -webkit-box;

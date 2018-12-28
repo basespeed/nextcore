@@ -25,7 +25,16 @@ function hook_loop_post_date(){
     ?><time><?php echo get_the_date(); ?></time><?php
 }
 
-add_action('hook_loop_post','hook_loop_post_meta',15);
+add_action('hook_loop_post','hook_loop_post_count_view',20);
+
+function hook_loop_post_count_view(){
+    ?><span class="count-views"><?php
+    echo ' - ';
+    echo getPostViews(get_the_ID());
+    ?></span><?php
+}
+
+add_action('hook_loop_post','hook_loop_post_meta',25);
 
 function hook_loop_post_meta(){
     ?><?php echo the_excerpt(); ?><?php

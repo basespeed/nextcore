@@ -250,3 +250,47 @@ function my_search($query) {
     // Return the modified query
     return $query;
 }
+
+
+// function to display number of posts.
+
+function getPostViews($postID){
+    $count_key = 'post_views_count';
+    $count = get_post_meta($postID, $count_key, true);
+    if($count==''){
+        delete_post_meta($postID, $count_key);
+        add_post_meta($postID, $count_key, '0');
+        return "0 lượt xem";
+    }
+    return $count.' lượt xem';
+}
+
+// function to count views.
+function setPostViews($postID) {
+    $count_key = 'post_views_count';
+    $count = get_post_meta($postID, $count_key, true);
+    if($count==''){
+        $count = 0;
+        delete_post_meta($postID, $count_key);
+        add_post_meta($postID, $count_key, '0');
+    }else{
+        $count++;
+        update_post_meta($postID, $count_key, $count);
+    }
+}
+
+//create sidebar shop
+function create_sidebar_shop() {
+    register_sidebar(
+        array (
+            'name' => __( 'Shop', 'nextcore' ),
+            'id' => 'sidebar_shop',
+            'description' => __( 'Sidebar shop for nextcore theme', 'nextcore' ),
+            'before_widget' => '<div class="widget-content">',
+            'after_widget' => "</div>",
+            'before_title' => '<h2 class="widget-title">',
+            'after_title' => '</h2>',
+        )
+    );
+}
+add_action( 'widgets_init', 'create_sidebar_shop' );
