@@ -20,5 +20,14 @@
 </head>
 
 <body <?php body_class(); ?>>
-<?php do_action('hook_header'); ?>
+<?php
+    do_action('hook_header');
+    /**
+     * Hook: hook_header.
+     *
+     * @hooked func_header_logo - 5
+     * @hooked func_header_menu - 10
+     */
+?>
+
 

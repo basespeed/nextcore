@@ -10,6 +10,12 @@
  */
 
     do_action('hook_footer');
+
+    /**
+     * Hook: hook_footer.
+     *
+     * @hooked func_hook_footer_copyright - 5
+     */
 ?>
 <?php wp_footer(); ?>
 </body>

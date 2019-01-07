@@ -24,4 +24,31 @@
       margin-bottom: -12px;
     }
   }
+
+  #secondary {
+    margin-top: 0px !important;
+  }
+
+
+}
+
+.search,.single-post{
+  .main{
+    @media screen and (max-width: 991px){
+      margin-top: 15px !important;
+    }
+  }
+
+  .sidebar_main.sc{
+    .row_fix {
+      margin-top: -21px;
+    }
+    #secondary{
+      margin-top: 35px !important;
+    }
+  }
+  .main {
+    margin-top: 30px;
+    margin-bottom: 60px;
+  }
 }

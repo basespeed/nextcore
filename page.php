@@ -18,9 +18,13 @@ get_header();
 <main class="main">
     <div class="inner">
         <?php
-            if(is_shop()){
-                get_templates_archive_shop();
-            }else {
+            if(is_plugin_active( 'woocommerce/woocommerce.php' )){
+                if(is_shop()){
+                    get_templates_archive_shop();
+                }else {
+                    get_templates_page();
+                }
+            }else{
                 get_templates_page();
             }
         ?>

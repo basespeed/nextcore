@@ -159,25 +159,51 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 if (defined('WP_DEBUG') && true === WP_DEBUG) {
     function core_style() {
         wp_enqueue_style( 'core-awesome', get_theme_file_uri().'/core/inc/assets/css/font-awesome.min.css', false );
+        wp_enqueue_style( 'core-awesome', 'https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,900', false );
+        wp_enqueue_style( 'core-style-fix', get_theme_file_uri().'/core/inc/assets/css/fix.css', false );
+        wp_enqueue_style( 'core-style-flickity', get_theme_file_uri().'/core/inc/assets/plugin/flick/flickity.min.css', false );
+        wp_enqueue_style( 'core-style-googleapis', 'https://fonts.googleapis.com/css?family=Nunito+Sans:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i', false );
         wp_enqueue_style( 'core-style', get_theme_file_uri().'/core/inc/assets/css/style.css', false );
     }
     add_action( 'wp_enqueue_scripts', 'core_style' );
 
     function core_script() {
+        wp_enqueue_script( 'flickity-js', get_theme_file_uri().'/core/inc/assets/plugin/flick/flickity.pkgd.min.js', true );
         wp_enqueue_script( 'core-js', get_theme_file_uri().'/core/inc/assets/js/js.js', true );
     }
     add_action( 'wp_enqueue_scripts', 'core_script' );
 }else{
     function core_style() {
         wp_enqueue_style( 'core-awesome', get_theme_file_uri().'/core/inc/assets/css/font-awesome.min.css', false );
+        wp_enqueue_style( 'core-style-fix', get_theme_file_uri().'/core/inc/assets/css/fix.css', false );
+        wp_enqueue_style( 'core-style-googleapis', 'https://fonts.googleapis.com/css?family=Nunito+Sans:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i', false );
+        wp_enqueue_style( 'core-style-flickity', get_theme_file_uri().'/core/inc/assets/plugin/flick/flickity.min.css', false );
         wp_enqueue_style( 'core-style', get_theme_file_uri().'/core/inc/assets/css/style.min.css', false );
     }
     add_action( 'wp_enqueue_scripts', 'core_style' );
 
     function core_script() {
+        wp_enqueue_script( 'flickity-js', get_theme_file_uri().'/core/inc/assets/plugin/flick/flickity.pkgd.min.js', true );
         wp_enqueue_script( 'core-js', get_theme_file_uri().'/core/inc/assets/js/js.min.js', true );
     }
     add_action( 'wp_enqueue_scripts', 'core_script' );
+}
+
+add_action('wp_enqueue_scripts','enq_menu_scripts_and_styles');
+
+function enq_menu_scripts_and_styles() {
+    // UI Core, loads jQuery as a dependancy
+    wp_enqueue_script(
+        'uicore',
+        get_theme_file_uri().'/core/inc/assets/plugin/jquery-ui.min.js',
+        array('jquery')
+    );
+
+    // UI Theme CSS
+    wp_enqueue_style( 'structurecss', get_theme_file_uri().'/core/inc/assets/plugin/jquery-ui.structure.min.css' );
+    wp_enqueue_style( 'themecss', get_theme_file_uri().'/core/inc/assets/plugin/jquery-ui.theme.min.css' );
+
+
 }
 
 //edit pagination
@@ -234,6 +260,14 @@ add_filter( 'get_the_archive_title', function ($title) {
 
 });
 
+function prefix_category_title( $title ) {
+    if ( is_tax() ) {
+        $title = single_cat_title( '', false );
+    }
+    return $title;
+}
+add_filter( 'get_the_archive_title', 'prefix_category_title' );
+
 
 //edit search post type
 add_filter( 'pre_get_posts', 'my_search' );
@@ -244,7 +278,7 @@ function my_search($query) {
     if ( !is_admin() && $query->is_main_query() && $query->is_search() ) {
 
         // Change the post_type parameter on the query
-        $query->set('post_type', 'post');
+        $query->set('post_type', array('post','beauty'));
     }
 
     // Return the modified query
@@ -294,3 +328,268 @@ function create_sidebar_shop() {
     );
 }
 add_action( 'widgets_init', 'create_sidebar_shop' );
+
+
+
+// Polylang ELEMENTOR
+add_filter( 'elementor/theme/get_location_templates/template_id', function( $post_id ) {
+    if ( function_exists( 'pll_get_post' ) ) {
+        $translation_post_id = pll_get_post( $post_id );
+        if ( null === $translation_post_id ) {
+            // the current language is not defined yet
+            return $post_id;
+        } elseif ( false === $translation_post_id ) {
+            //no translation yet
+            return $post_id;
+        } elseif ( $translation_post_id > 0 ) {
+            // return translated post id
+            return $translation_post_id;
+        }
+    }
+    return $post_id;
+} );
+
+
+//Change layout column
+//**Woocommerce
+
+add_filter('change_layout_single_shop',function ($output){
+    $output = "sc";
+    return $output;
+});
+
+add_filter('change_layout_archive_shop',function ($output){
+    $output = "sc";
+    return $output;
+});
+
+add_filter('change_layout_page_shop',function ($output){
+    $output = "sc";
+    return $output;
+});
+
+//**Template
+add_filter('change_layout_archive',function ($output){
+    $output = "cs";
+    return $output;
+});
+
+add_filter('change_layout_page',function ($output){
+    $output = "cs";
+    return $output;
+});
+
+add_filter('change_layout_page_search',function ($output){
+    $output = "cs";
+    return $output;
+});
+
+add_filter('change_layout_single',function ($output){
+    $output = "cs";
+    return $output;
+});
+
+add_filter('change_slider_gallery_single_product',function ($output){
+    $output = "rows";
+    return $output;
+});
+
+$user = wp_get_current_user();
+
+$current_user = wp_get_current_user();
+
+if ($current_user->user_login == 'manager1') {
+    function wpdocs_adjust_the_wp_menu() {
+        remove_submenu_page( "themes.php", "theme-editor.php" );
+        remove_submenu_page( "themes.php", "theme-editor.php" );
+        remove_submenu_page( 'options-general.php', 'options-permalink.php' );
+        remove_submenu_page( 'options-general.php', 'whl_settings' );
+        remove_submenu_page( 'plugins.php', 'plugin-editor.php' );
+        remove_submenu_page( 'plugins.php', 'plugin-install.php' );
+        remove_submenu_page( 'index.php', 'update-core.php' );
+        remove_menu_page( 'plugins.php');
+        remove_menu_page( 'tools.php');
+        remove_menu_page( 'options-general.php');
+        remove_menu_page( 'users.php' );
+        remove_menu_page( 'users.php' );
+        remove_menu_page( 'admin.php?page=elementor-tools' );
+        remove_menu_page( 'edit.php?post_type=acf-field-group' );
+        remove_menu_page( 'edit.php?post_type=elementor_library' );
+        remove_menu_page( 'elementor' );
+        remove_menu_page( 'update-core.php' );
+        remove_menu_page( 'mlang' );
+    }
+    add_action( 'admin_menu', 'wpdocs_adjust_the_wp_menu', 999 );
+
+    function restrict_admin_with_redirect() {
+
+        $restrictions = array(
+            'theme-editor.php',
+            'themes.php',
+            'options-permalink.php',
+            'plugin-editor.php',
+            'plugin-install.php',
+            'plugins.php',
+            'admin.php?page=elementor-tools',
+            'update-core.php',
+            'users.php',
+            'user-new.php',
+            'profile.php',
+            'options-general.php',
+            'options-general.php#whl_settings'
+        );
+        //$actual_link = "$_SERVER[REQUEST_URI]";
+        $url = "$_SERVER[REQUEST_URI]";
+        $lastSegment = basename(parse_url($url, PHP_URL_PATH));
+        foreach ( $restrictions as $restriction ) {
+            if($lastSegment == $restriction){
+                return header("Location: ".get_home_url());
+                var_dump($lastSegment);
+            }
+
+        }
+    }
+
+    add_action( 'admin_init', 'restrict_admin_with_redirect' );
+}
+
+
+
+if(is_plugin_active( 'woocommerce/woocommerce.php' )){
+    //mini cart ajax
+    add_filter( 'woocommerce_add_to_cart_fragments', function($fragments) {
+
+        ob_start();
+        ?>
+
+        <span class="cart-contents">
+        <?php echo WC()->cart->get_cart_contents_count(); ?>
+    </span>
+
+        <?php $fragments['span.cart-contents'] = ob_get_clean();
+
+        return $fragments;
+
+    } );
+
+    add_filter( 'woocommerce_add_to_cart_fragments', function($fragments) {
+
+        ob_start();
+        ?>
+
+        <div class="header-quickcart">
+            <?php woocommerce_mini_cart(); ?>
+        </div>
+
+        <?php $fragments['div.header-quickcart'] = ob_get_clean();
+
+        return $fragments;
+
+    } );
+
+
+    add_filter('change_layout_page',function ($output){
+        $output = "c";
+        return $output;
+    });
+
+    /**
+     * Change a currency symbol
+     */
+    add_filter( 'woocommerce_currency_symbol', 'change_currency_symbol', 10, 2 );
+
+    function change_currency_symbol( $symbols, $currency ) {
+        if ( 'VND' === $currency ) {
+            return 'vnđ';
+        }
+
+        return $symbols;
+    }
+
+    //Change text button woocommerce
+    add_filter('woocommerce_product_add_to_cart_text', 'wh_archive_custom_cart_button_text');   // 2.1 +
+
+    function wh_archive_custom_cart_button_text()
+    {
+        return __('Mua hàng', 'woocommerce');
+    }
+
+    //woocommerce
+    function custom_theme_setup() {
+        add_theme_support( 'woocommerce' );
+    }
+    add_action( 'after_setup_theme', 'custom_theme_setup' );
+
+    add_filter( 'woocommerce_product_tabs', 'woo_remove_product_tabs', 98 );
+
+    function woo_remove_product_tabs( $tabs ) {
+        /*unset( $tabs['description'] );          // Remove the description tab
+        unset( $tabs['reviews'] );  */        // Remove the reviews tab
+        unset( $tabs['additional_information'] );   // Remove the additional information tab
+        return $tabs;
+    }
+
+    remove_filter( 'woocommerce_product_get_rating_html', 'pure_wc_get_rating_html', 10, 3 );
+    remove_filter( 'woocommerce_get_star_rating_html', 'pure_wc_get_star_rating_html', 10, 3 );
+
+    add_filter( 'woocommerce_product_get_rating_html', 'pure_wc_get_rating_html_edit', 10, 3 );
+
+    function pure_wc_get_rating_html_edit( $html, $rating, $count ) {
+
+        $html = '<div class="star-rating">';
+        $html .= '<span class="stars"><i class="fa fa-star-o" aria-hidden="true"></i><i class="fa fa-star-o" aria-hidden="true"></i><i class="fa fa-star-o" aria-hidden="true"></i><i class="fa fa-star-o" aria-hidden="true"></i><i class="fa fa-star-o" aria-hidden="true"></i></span>';
+        $html .= wc_get_star_rating_html( $rating, $count );
+        $html .= '</div>';
+
+        return $html;
+    }
+
+
+    add_filter( 'woocommerce_get_star_rating_html', 'pure_wc_get_star_rating_html_edit', 10, 3 );
+
+    function pure_wc_get_star_rating_html_edit( $html, $rating, $count ) {
+
+        $html = '<span class="star-rating-active" style="width:' . ( ( $rating / 5 ) * 100 ) . '%">';
+        $html .= '<span class="stars star-active"><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></span>';
+
+        if ( 0 < $count ) {
+            $html .= '<span class="txt" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">';
+            /* translators: 1: rating 2: rating count */
+            $html .= sprintf( _n( 'Rated %1$s out of 5 based on %2$s customer rating', 'Rated %1$s out of 5 based on %2$s customer ratings', $count, 'woocommerce' ), '<strong class="rating" itemprop="ratingValue">' . esc_html( $rating ) . '</strong>', '<span class="rating" itemprop="reviewCount">' . esc_html( $count ) . '</span>' );
+        } else {
+            $html .= '<span class="txt" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">';
+            $html .= '<meta itemprop="worstRating" content = "1">';
+            $html .= sprintf( esc_html__( 'Rated %s out of %s', 'woocommerce' ), '<strong class="rating" itemprop="ratingValue">' . esc_html( $rating ) . '</strong>', '<span itemprop="bestRating">5</span>' );
+        }
+        $html .= '</span>';
+
+        $html .= '</span>';
+
+        return $html;
+    }
+
+    add_action( 'after_setup_theme', 'yourtheme_setup' );
+
+    function yourtheme_setup() {
+        add_theme_support( 'wc-product-gallery-zoom' );
+        add_theme_support( 'wc-product-gallery-lightbox' );
+        add_theme_support( 'wc-product-gallery-slider' );
+    }
+
+    function mytheme_add_woocommerce_support() {
+        add_theme_support( 'woocommerce' );
+    }
+    add_action( 'after_setup_theme', 'mytheme_add_woocommerce_support' );
+}
+
+
+
+/*function add_copyright() {
+    echo'<div id="add_copyright" class="add_copyright_vi"><div class="inner">© Bản quyền thuộc về bacsytuynh.com | Cung cấp bởi <a style="color: #FFF;" href="https://minhduongads.com/"> MinhDuongADS.Com</a></div></div>';
+
+}
+add_action('wp_footer', 'add_copyright',1000);*/
+
+//disable editor new wordpress 5
+add_filter('use_block_editor_for_post', '__return_false');
+

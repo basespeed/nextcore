@@ -1,0 +1,81 @@
+.woocommerce-cart{
+  .main{
+    margin-bottom: 20px;
+  }
+  .woocommerce-cart-form{
+    background: #FFF;
+    border-radius: 12px;
+    table{
+      border: none;
+      a{
+        color: #000;
+        font-weight: 600;
+        &:hover{
+          color: red;
+        }
+      }
+      td,tr{
+        text-align: center;
+      }
+      .amount{
+        color: red;
+        font-weight: bold;
+      }
+
+      button{
+        width: 200px;
+        height: 40px;
+        background: red;
+        color: #FFF !important;
+        margin-left: 5px;
+        &:hover{
+          background: #000;
+          color: #FFF;
+        }
+      }
+      input{
+        width: 200px;
+        height: 40px;
+      }
+    }
+    .coupon{
+      button{
+        width: 150px;
+      }
+    }
+  }
+
+  input{
+    border:1px solid #E5E5E5;
+  }
+
+  h1{
+    margin-bottom: 15px;
+  }
+
+  .shop_table.shop_table_responsive{
+    background: #FFF;
+    border-radius: 12px;
+  }
+  h2{
+    margin-bottom: 15px;
+  }
+  .amount{
+    font-weight: 600;
+    color: red;
+  }
+  a{
+    color: #000;
+    font-weight: 600;
+    &:hover{
+      color: red;
+    }
+  }
+  a.checkout-button.button.alt.wc-forward{
+    background: red;
+    color: #FFF;
+    &:hover{
+      background: #000;
+    }
+  }
+}

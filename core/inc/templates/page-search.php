@@ -1,9 +1,22 @@
 <?php
 get_header();
+
+$default = 'cs';
+if(apply_filters( 'change_layout_page_search', $default ) == 'cs'){
+    $colum_layout = 'cs';
+}elseif(apply_filters( 'change_layout_page_search', $default ) == 'sc'){
+    $colum_layout = 'sc';
+}elseif(apply_filters( 'change_layout_page_search', $default ) == 'scs'){
+    $colum_layout = 'scs';
+}elseif(apply_filters( 'change_layout_page_search', $default ) == 'c'){
+    $colum_layout = 'c';
+}else{
+    $colum_layout = $default;
+}
 ?>
     <main class="main">
         <div class="inner">
-            <div class="content_main">
+            <div class="content_main <?php echo $colum_layout; ?>">
                 <div class="row_fix search">
                     <?php
                     if ( have_posts() ) :
@@ -11,6 +24,7 @@ get_header();
 
                         /* Start the Loop */
                         echo '<div class="post">';
+                        echo '<div class="post_insider">';
                         while ( have_posts() ) : the_post();
                             ?>
                             <div class="item">
@@ -31,6 +45,7 @@ get_header();
                         <?php
                         endwhile;
                         echo '</div>';
+                        echo '</div>';
                         //Pagination
                         do_action('hook_pagination');
                     /**
@@ -48,7 +63,7 @@ get_header();
                 </div>
             </div>
 
-            <div class="sidebar_main">
+            <div class="sidebar_main <?php echo $colum_layout; ?>">
                 <div class="row_fix">
                     <?php get_sidebar(); ?>
                 </div>

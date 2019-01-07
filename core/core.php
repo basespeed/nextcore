@@ -12,20 +12,23 @@ Class NextCore{
         self::$instance->templates();
     }
 
-    public function FunctionDefault(){
-        include "inc/lib/function-default.php";
-    }
-
     public function update(){
         /*Check Update Theme*/
         include "inc/lib/update/update.php";
         /*Check setting Plugin*/
-        include "inc/lib/tgm/init.php";
+        //include "inc/lib/tgm/init.php";
     }
 
     public function hook(){
         include "inc/lib/hook/hook-loop-archive-post.php";
         include "inc/lib/hook/hook-loop-single-post.php";
+        include "inc/lib/hook/hook_header.php";
+        include "inc/lib/hook/hook_footer.php";
+
+        //woocommerce
+        include "inc/lib/hook/woocommerce/hook_mini_cart.php";
+        include "inc/lib/hook/woocommerce/hook_product_item.php";
+        include "inc/lib/hook/woocommerce/content-product.php";
     }
 
     public function widget(){
@@ -34,7 +37,7 @@ Class NextCore{
 
     public function templates(){
         function get_templates_archive(){
-            include "inc/templates/archive-post.php";
+            include "inc/templates/archive.php";
         }
         function get_templates_search(){
             include "inc/templates/page-search.php";
@@ -43,11 +46,15 @@ Class NextCore{
             include "inc/templates/single.php";
         }
         function get_templates_archive_shop(){
-            include "inc/templates/archive-shop.php";
+            include "inc/templates/page-shop.php";
         }
         function get_templates_page(){
             include "inc/templates/page.php";
         }
+    }
+
+    public function FunctionDefault(){
+        include "inc/lib/function-default.php";
     }
 }
 
@@ -59,4 +66,8 @@ getNextCore();
 
 
 
-
+function get_column_layout( $output ) {
+    $output = 'c';
+    return $output;
+}
+add_filter( 'hook_filter_change_layout', 'get_column_layout' );
